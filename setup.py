@@ -1,22 +1,4 @@
-# Cython compile instructions
-
-from setuptools import setup
-
-from setuptools import Extension, find_packages
-import numpy
-import os
-import glob
-from sys import platform
-import sys
-import sysconfig
-py_modules = ['tinyImpute', 'tinyMgsAssign']
-
-src_modules = []
-src_modules += glob.glob(os.path.join('src','tinyhouse-tinyassign', '*.py'))
-src_modules += glob.glob(os.path.join('src','Assign', '*.py'))
-
-src_modules = [os.path.splitext(file)[0] for file in src_modules]
-py_modules += src_modules
+from setuptools import Extension, find_packages, setup
 
 setup(
     name="AlphaAssign",
@@ -27,22 +9,23 @@ setup(
     long_description="AlphaAssign is a parentage assignement algorithm that was designed to handle SNP and GBS data.",
     long_description_content_type="text/markdown",
     url="",
-    packages=find_packages(),
-    py_modules = py_modules,
+    
+    packages=['tinyassign','tinyassign.Assign','tinyassign.tinyhouse'],
+    package_dir={'': 'src'},
 
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
+
     entry_points = {
     'console_scripts': [
-        'AlphaAssign=tinyAssign:main',
-        'TinyMGSAssign=tinyMgsAssign:main',
+        'AlphaAssign=tinyassign.tinyAssign:main',
+        'AlphaMGSAssign=tinyassign.tinyMgsAssign:main',
         ],
     },
     install_requires=[
         'numpy',
         'numba',
-        'scipy',
-        'alphaplinkpython'
+        'scipy'
     ]
 )

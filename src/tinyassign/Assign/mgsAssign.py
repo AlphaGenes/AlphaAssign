@@ -3,7 +3,7 @@
 from numba import jit, jitclass, float32, int32, int64, optional
 import numpy as np
 from collections import OrderedDict
-from tinyhouse import ProbMath
+from ..tinyhouse import ProbMath
 
 def evaluateMGS(scoreCont, assignInfo) :
     scoreCont.scores = []

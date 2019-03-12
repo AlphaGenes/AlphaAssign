@@ -1,4 +1,4 @@
 
-python ../tinyAssign.py -genotypes trueGenotypes.txt \
-                        -out assign \
-                        -potentialsires sire.list
+AlphaAssign -genotypes data/trueGenotypes.txt \
+                        -out outputs/assign \
+                        -potentialsires data/sire.list

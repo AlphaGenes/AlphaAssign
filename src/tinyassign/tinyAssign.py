@@ -1,7 +1,7 @@
 
-from tinyhouse import Pedigree
-from tinyhouse import InputOutput 
-from Assign import assignEvaluate
+from .tinyhouse import Pedigree
+from .tinyhouse import InputOutput 
+from .Assign import assignEvaluate
 
 
 def main() :

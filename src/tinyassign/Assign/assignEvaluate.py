@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import binom
 from numba import jit
-from tinyhouse import ProbMath
+from ..tinyhouse import ProbMath
 
 def performAssignement(assignInfo, assignment, args = None):
 

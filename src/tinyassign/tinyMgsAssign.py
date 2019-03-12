@@ -1,7 +1,7 @@
-from tinyhouse import Pedigree
-from tinyhouse import InputOutput 
-from Assign import assignEvaluate
-from Assign import mgsAssign
+from .tinyhouse import Pedigree
+from .tinyhouse import InputOutput 
+from .Assign import assignEvaluate
+from .Assign import mgsAssign
 
 
 # python tinyimpute/tinyMgsAssign.py -out test -genotypes tmpData/genotypes.250 -potentialgrandsires tmpData/grandSires.txt
