@@ -20,7 +20,7 @@ setup(
     entry_points = {
     'console_scripts': [
         'AlphaAssign=tinyassign.tinyAssign:main',
-        'AlphaMGSAssign=tinyassign.tinyMgsAssign:main',
+        # 'AlphaMGSAssign=tinyassign.tinyMgsAssign:main',
         ],
     },
     install_requires=[
