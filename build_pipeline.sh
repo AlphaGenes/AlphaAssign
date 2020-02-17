@@ -1,4 +1,4 @@
-if [[ ! -f src/alphafamimpute/tinyhouse/Pedigree.py ]] ; then
+if [[ ! -f src/tinyassign/tinyhouse/Pedigree.py ]] ; then
     echo Pedigree.py file not found. Check that the tinyhouse submodule is up to date
     exit 
 fi
@@ -23,7 +23,7 @@ cp dist/* $target
 cp docs/build/latex/AlphaAssign.pdf $target 
 
 # Move the examples over
-cp -r example/* $target 
-chmod 770 $target/run_examples.sh
+cp -r example $target
+chmod 770 $target/example/run_examples.sh
 zip -r $target.zip AlphaAssign
 
