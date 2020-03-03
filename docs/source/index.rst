@@ -18,7 +18,7 @@ Introduction
 
 |aa| is a parentage assignment algorithm. This program uses a likelihood based model to determine the sire of an individual based on a list of potential sires. AlphaAssign differs from other parentage assignment algorithms by having the option to use phase information to determine parentage. For more information on the algorithm see *Parentage assignment with low density array data and low coverage sequence data* `(Journal of Animal Breeding and Genetics) <https://onlinelibrary.wiley.com/doi/10.1111/jbg.12370>`_.
 
-Due to the disproportionate impact of map errors with the usage of phased data, we currently do not recommend using phase information to assign parentage. However, substantial advantages can be gained by using a allele probabilities generated via an imputation algorithm (e.g. AlphaImpute or AlphaPeel) to correct for genotyping errors.
+Due to the disproportionate impact of map errors with the usage of phased data, we currently do not recommend using phase information to assign parentage. However, substantial advantages can be gained by using a allele probabilities generated via an imputation algorithm (e.g. AlphaImpute or AlphaAssign) to correct for genotyping errors.
 
 Please report bugs or suggestions on how the program / user interface / manual could be improved or made more user friendly to `John.Hickey@roslin.ed.ac.uk <John.Hickey@roslin.ed.ac.uk>`_ or `Awhalen@roslin.ed.ac.uk <awhalen@roslin.ed.ac.uk>`_.
 
@@ -45,36 +45,83 @@ Run commands and spec file
 
 |aa| is a parentage assignment algorithm. To run |aa| call ``python AlphaAssign.py [options]``. All options are of the form "option=parameter". The following options are valid for |aa|:
 
-.. csv-table:: Key run paramaters
-  :header: "option", "description"
-  :widths: 20, 50
-   
-  "potentialSires",  "A list of individuals and potential sires."
-  "potentialDams",  "A list of individuals and potential dams."
-  "out",             "[Required] Output file prefix."
+AlphaAssign takes in a number of command line arguments to control the program's behavior. To view a list of arguments, run AlphaAssign without any command line arguments, i.e. ``AlphaAssign`` or ``AlphaAssign -h``. 
 
-.. csv-table:: Data import options
-  :header: "option", "description"
-  :widths: 20, 50
 
-  "bfile",           "The genotype file in Plink binary format (.bed, .bim,.fam)"
-  "file",            "The genotype file in AlphaGenes format."
-  "seqFile [Not tested on current version.]",         "Sequence read counts in AlphaGenes format."
-  "hapsFile [Not tested on current version.]",        "Genotype probabilities for phased individuals."
-  "pedigree",        "An alternative pedigree file. Otherwise the pedigree is loaded from the bfile."
+Core Arguments 
+--------------
 
-.. csv-table:: Additional Options
-  :header: "option", "description"
-  :widths: 20, 50
+::
+  
+  Core arguments
+    -out prefix              The output file prefix.
 
-  "usePhase",        "[No argument] A flag  to use phase information (Not recomended). This option requires SNP information to be loaded via the bfile option."
-  "fullOutput",      "[No argument] A flag to include all likelihoods in the output."
-  "genoError",       "The assumed error rate for genotypes.  (Default 0.01). "
-  "seqError",        "The assumed error rate for sequence reads.  (Default 0.01). "
+The ``-out`` argument gives the output file prefix for where the outputs of AlphaAssign should be stored. AlphaAssign outputs a ``.pedigree`` file which gives the pedigree with sires assigned, a ``.pedigree.top`` which gives the best guess pedigree with individuals always assigned parents, a ``.sires`` and ``.dams`` files which give more information on the assignment statistic for the sires and dams.
 
-If individuals are present in multiple files passed to AlphaAssign, AlphaAssign will use the genotype information found in the last file on this list: bfile < file < seqFile < hapsFile. By default AlphaAssign does not use phase information provided in the haps file. Instead it only uses the genotype probabilities provided in the file. Use of phase information may lead to more accurate imputation in some highly-specialized cases, however, it leads to substantial computational costs and can lower accuracy in the case of map errors.
+Input Arguments 
+----------------
 
-AlphaAssign outputs three files by default. A pedigree, out.pedigree, which gives the revised pedigree with sires and dames assigned to individuals. In the case where the algorithm does not find a good candidate sire or dam it returns a "0". A second pedigree, out.pedigree.top, which gives the best guess revised pedigree with all individuals in the sire or dam files assigned a sire or a dame. A data file, out.sires, which reports for each individual by sire pair the negative log likelihood that that sire is the parent of the child and the log likelihood of a null parent, a null full sib of the parent, and a null individual from the population. If the option "fullOutput" is included, an additional file, out.sires.full, is reported which contains additional summary statistics. Similar data files for dams is also reported if a dam file is provided. 
+::
+
+  Input Options:
+    -bfile [BFILE [BFILE ...]]
+                          A file in plink (binary) format. Only stable on
+                          Linux).
+    -genotypes [GENOTYPES [GENOTYPES ...]]
+                          A file in AlphaGenes format.
+    -seqfile [SEQFILE [SEQFILE ...]]
+                          A sequence data file.
+    -pedigree [PEDIGREE [PEDIGREE ...]]
+                          A pedigree file in AlphaGenes format.
+
+  Multithreading Options:
+    -iothreads IOTHREADS  Number of threads to use for input and output.
+                          Default: 1.
+
+AlphaAssign requires a genotype file to run. It supports  binary plink files, ``-bfile``, genotype files in the AlphaGenesFormat, ``-genotypes``, and sequence data read counts in the AlphaGenes format, ``-seqfile``. 
+
+A pedigree file may also be supplied to provide a list of known sires using the ``-pedigree`` option. 
+
+Binary plink files require the package ``alphaplinkpython``. This can be installed via ``pip`` but is only stable for Linux.
+
+The parameter ``-iothreads`` controls the number of threads/processes used by AlphaAssign. AlphaAssign uses additional threads to parse and format input and output files. Setting this option to a value greater than 1 is only recommended for very large files (i.e. >10,000 individuals).
+
+
+Assignment arguments: 
+------------------------
+::
+
+  Core assignement arguments:
+    -potentialsires POTENTIALSIRES
+                          A list of potential sires for each individual.
+    -potentialdams POTENTIALDAMS
+                          A list of potential dams for each individual.
+
+  Arguments to choose how sires and dams are assigned:
+    -runtype RUNTYPE      opp, likelihood, both, Default: both
+    -add_threshold ADD_THRESHOLD
+                          Assignement score threshold for adding a new
+                          individual as a parent
+    -p_threshold P_THRESHOLD
+                          Negative log-pvalue threshold for removing parents via
+                          opposing homozygotes
+
+  Probability Arguments:
+    -error ERROR          Genotyping error rate. Default: 0.01.
+    -seqerror SEQERROR    Assumed sequencing error rate. Default: 0.001.
+    -usemaf               A flag to use the minor allele frequency when
+                          constructing genotype estimates for the sire and
+                          maternal grandsire. Not recomended for small input
+                          pedigrees.
+
+AlphaAssign requires as inputs either a ``-potentialsires`` or ``-potentialdams`` argument. This argument gives a list of sires or dams to assign for each individual.
+
+The ``-runtype`` determines how assignments are done. The options are to do assignments using the number opposing homozygous loci, ``opp``, via a likelihood model or both. For the likelihood model the ``-add_threshold`` determines the log likelihood values needed to either add a putative parent or reject a parent. For opposing homozygous values ``-p_threshold`` determines the p-value threshold required reject the top parent with opposing homozygous loci. The p-value is determined by a binomial test using the genotyping error rate.
+
+
+The ``-error``, ``-seqerror`` control the genotyping error rate and sequence error rate. Changing these to values that more closely reflect the true data may increase accuracy in some cases.
+
+The flag ``-usemaf`` changes whether the minor allele frequency is used to estimate the putative genotypes of the parents. This can increase accuracy if large number of individuals are included in the genotype file.
 
 Input file formats
 ~~~~~~~~~~~~~~~~~~
@@ -82,66 +129,47 @@ Input file formats
 Genotype file 
 -------------
 
-The genotype file can be provided in Plink binary format. For more information see `https://www.cog-genomics.org/plink/1.9 <https://www.cog-genomics.org/plink/1.9/formats#bed>`_
+Genotype files contain the input genotypes for each individual. The first value in each line is the individual's id. The remaining values are the genotypes of the individual at each locus, either 0, 1, or 2 (or 9 if missing). The following examples gives the genotypes for four individuals genotyped on four markers each.
 
-AlphaGenes Genotype file
-------------------------
-
-The genotype information can also be provided via a text file. Each row contains the individual's id and the allele counts for SNPs on the SNP array. Missing values should be coded as a 3.
 Example: ::
 
-  id1 1 0 0 2 0 1
-  id2 0 0 1 2 1 2
-  id3 1 0 0 0 2 1
-  id4 0 1 0 1 2 1
+  id1 0 2 9 0 
+  id2 1 1 1 1 
+  id3 2 0 2 0 
+  id4 0 2 1 0
 
-Sequence read counts
---------------------
+Sequence file
+-------------
 
-Sequence read counts can be provided in the AlphaGenes format. In this format there are two rows per individual, the first row is for the reference allele. The second row is for the alternative allele. Each row contains the individual's id and the read counts for that allele.
+The sequence data file is in a similar Sequence data is given in a similar format to the genotype data. For each individual there are two lines. The first line gives the individual's id and the read counts for the reference allele. The second line gives the individual's id and the read counts for the alternative allele.
+
 Example: ::
 
-  id1 3 2 0 2 5 20
-  id1 0 0 3 10 0 1
-  id2 0 0 0 3 7 0
-  id2 5 0 0 0 5 0
-  id3 4 5 11 1 1 1
-  id3 1 0 0 2 5 5
-  id4 0 1 0 1 7 1
-  id4 0 0 0 4 2 1
-
-Haplotype file
---------------
-
-The haplotype file provides the (phased) allele probabilities for each locus. There are four lines per individual containing the allele probability for the (aa, aA, Aa, AA) alleles where the paternal allele is listed first, and where *a* is the reference (or major) allele and *A* is the alternative (or minor) allele.  This file can generated via AlphaPeel (prefix: *.haps*).
-Example: ::
-
-  id1    0.9998    0.0001    0.0001    1.0000
-  id1    0.0000    0.4999    0.4999    0.0000
-  id1    0.0000    0.4999    0.4999    0.0000
-  id1    0.0001    0.0001    0.0001    0.0000
-  id2    0.0000    1.0000    0.0000    1.0000
-  id2    0.9601    0.0000    0.0455    0.0000
-  id2    0.0399    0.0000    0.9545    0.0000
-  id2    0.0000    0.0000    0.0000    0.0000
-  id3    0.9998    0.0001    0.0001    1.0000
-  id3    0.0000    0.4999    0.4999    0.0000
-  id3    0.0000    0.4999    0.4999    0.0000
-  id3    0.0001    0.0001    0.0001    0.0000
-  id4    1.0000    1.0000    0.0000    1.0000
-  id4    0.0000    0.0000    0.0000    0.0000
-  id4    0.0000    0.0000    0.0000    0.0000
-  id4    0.0000    0.0000    1.0000    0.0000
+  id1 4 0 0 7 # Reference allele for id1
+  id1 0 3 0 0 # Alternative allele for id2
+  id2 1 3 4 3
+  id2 1 1 6 2
+  id3 0 3 0 1
+  id3 5 0 2 0
+  id4 2 0 6 7
+  id4 0 7 7 0
 
 Pedigree file
 -------------
 
-Additional pedigree not included in the plink file can be included in a seperate pedigree file. The format of the pedigree file is id, sireid, damid. Missing or unkown values are coded as 0.
+Each line of a pedigree file has three values, the individual's id, their father's id, and their mother's id. "0" represents an unknown id.
+
 Example: ::
 
   id1 0 0
   id2 0 0
   id3 id1 id2
+  id4 id1 id2
+
+Binary plink file
+-----------------
+
+AlphaPeel supports the use of binary plink files using the package ``AlphaPlinkPython``. AlphaPeel will use the pedigree supplied by the ``.fam`` file if a pedigree file is not supplied. Otherwise the pedigree file will be used and the ``.fam`` file will be ignored. 
 
 Potential sires file
 --------------------
@@ -161,21 +189,17 @@ Output file formats
 Output file
 --------------
 
-This file gives the basic output for AlphaAssign. The first column is the id of the individual. The second column is the id of a sire. The remaining columns give the log likelihood of the sire, whether that sire was chosen, and the log likelihood of a null parent, null full sib of the parent, and a null random individual.
+This file gives the basic output for AlphaAssign. The first column is the id of the individual. The second column is the id of a sire. The remaining columns give the id of a known parent, whether the parent was selected as the most likely parent, the final weight placed on the sire (higher means more likely to be the true sire), and then the scores for the sire distribution, fullsib, halfsib and null distributions. There are an additional three columns which give the number of opposing homozygous loci with and without taking a known parent into account, the number of loci evaluated, and the log-p value of observing that number of opposing homozygous loci with the input error rate.
 
 Example: ::
 
-  id candidate score chosen estSire estFullSib estNull
-  4001 3681 6558.87993318 1 6322.88957816 9091.85666393 11688.4672246
-  4001 3165 11615.510009 0 6322.88957816 9091.85666393 11688.4672246
-  4001 3385 11145.9531181 0 6322.88957816 9091.85666393 11688.4672246
-  4001 3273 11359.1851049 0 6322.88957816 9091.85666393 11688.4672246
-  4001 3279 11671.4021993 0 6322.88957816 9091.85666393 11688.4672246
-  4002 3811 6136.86138214 1 6056.76191667 8598.68637406 11135.0289353
-
-Full output file
-----------------
-
-This file is generated using the option "fullOutput". This file gives the full output of the algorithm. The first column is the id of the individual. The second column is the expected log likelihood and standard deviation of the log likelihood for a null parent, full sib of the parent, half sib of the parent, and random individual. The remaining columns provide the ids of each potential sire and the log likelihoods for those sires.
+id candidate altParent chosen score estSire estFullSib esthalfSib estNull nOpposing nOpposingWOparent nLoci logP
+801 657 0 0 136.2877197265625 0.0 -136.28772 -222.13818 -326.5254 0 0 1000 -4.3172179315834146e-05
+801 735 0 0 0.0 -50.85962 0.0 -51.37207 -126.38208 67 67 1000 -76.93231757011387
+801 703 0 0 22.154541015625 0.0 -22.154541 -85.90723 -170.91504 40 40 1000 -29.83771178795763
+801 609 0 0 22.9976806640625 0.0 -22.99768 -87.28125 -172.93481 40 40 1000 -29.83771178795763
+801 629 0 0 25.065185546875 0.0 -25.065186 -88.16138 -171.9967 38 38 1000 -26.964562708500615
+801 763 0 0 0.0 -77.24463 0.0 -40.976196 -104.28198 72 72 1000 -87.05572755433364
+801 715 0 0 0.0 -39.418335 0.0 -53.59961 -130.56909 63 63 1000 -69.11322704626824
 
 .. |aa| replace:: **AlphaAssign** 

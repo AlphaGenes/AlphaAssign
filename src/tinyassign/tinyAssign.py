@@ -2,26 +2,51 @@
 from .tinyhouse import Pedigree
 from .tinyhouse import InputOutput 
 from .Assign import assignEvaluate
+import argparse
 
+def getArgs() :
+
+    parser = argparse.ArgumentParser(description='')
+    core_parser = parser.add_argument_group("Core arguments")
+    core_parser.add_argument('-out', required=True, type=str, help='The output file prefix.')
+   
+    # Input options
+    input_parser = parser.add_argument_group("Input Options")
+    InputOutput.add_arguments_from_dictionary(input_parser, InputOutput.get_input_options(), options = ["bfile", "genotypes", "seqfile", "pedigree"]) 
+
+    # Core assignment options
+    core_assign_parser = parser.add_argument_group("Core assignement arguments")
+    core_assign_parser.add_argument('-potentialsires', default=None, required=False, type=str, help='A list of potential sires for each individual.')
+    core_assign_parser.add_argument('-potentialdams', default=None, required=False, type=str, help='A list of potential dams for each individual.')
+
+    # Selection_parser
+    selection_parser = parser.add_argument_group("Arguments to choose how sires and dams are assigned")
+    selection_parser.add_argument('-runtype',default="both", required=False, type=str, help='opp, likelihood, both, Default: both')
+    selection_parser.add_argument('-add_threshold',default=9, required=False, type=float, help='Assignement score threshold for adding a new individual as a parent')
+    selection_parser.add_argument('-p_threshold',default=-9, required=False, type=float, help='Negative log-pvalue threshold for removing parents via opposing homozygotes')
+
+    # Multithreading
+    multithread_parser = parser.add_argument_group("Multithreading Options")
+    InputOutput.add_arguments_from_dictionary(multithread_parser, InputOutput.get_multithread_options(), options = ["iothreads"]) 
+
+    # General Arguments
+    assign_parser = parser.add_argument_group("Probability Arguments")
+    InputOutput.add_arguments_from_dictionary(assign_parser, InputOutput.get_probability_options(), options = ["error", "seqerror"]) 
+    assign_parser.add_argument('-usemaf', action='store_true', required=False, help='A flag to use the minor allele frequency when constructing genotype estimates for the sire and maternal grandsire. Not recomended for small input pedigrees.')
+
+    return InputOutput.parseArgs("AlphaAssign", parser)
 
 def main() :
     #Read in data
     print("Read in data")
     pedigree = Pedigree.Pedigree() 
-    args = InputOutput.parseArgs("AlphaAssign")
+    args = getArgs()
     InputOutput.readInPedigreeFromInputs(pedigree, args)
     print("Data read in")
 
     assignments = []
     sireAssignements = []
     damAssignments = []
-
-    # if args.checkpedigree :
-    #     for ind in ped.individuals.values():
-    #         father = ind.sire
-    #         mother = ind.dam
-    #         if father is not None: sireAssignements.append(assignEvaluate.AssignmentHolder(ind, None, [father], findSire=True))
-    #         if mother is not None: damAssignments.append(assignEvaluate.AssignmentHolder(ind, None, [mother], findSire=False))
 
     if args.potentialsires is not None:
         sireAssignements = assignEvaluate.readInAssignments(args.potentialsires, findSire = True, pedigree=pedigree)
