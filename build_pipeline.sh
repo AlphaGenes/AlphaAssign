@@ -16,7 +16,7 @@ python setup.py bdist_wheel
 
 if [ $command == "install" ] ; then
     pip uninstall AlphaAssign -y
-    pip install dist/AlphaAssign-0.0.1-py3-none-any.whl
+    pip install dist/AlphaAssign-1.1.0-py3-none-any.whl
 fi
 
 #Compile manual

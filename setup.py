@@ -2,7 +2,7 @@ from setuptools import Extension, find_packages, setup
 
 setup(
     name="AlphaAssign",
-    version="0.0.1",
+    version="1.1.0",
     author="Andrew Whalen",
     author_email="awhalen@roslin.ed.ac.uk",
     description="A pedigree assignement algorithm.",

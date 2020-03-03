@@ -10,6 +10,9 @@ AlphaAssign
 
 AlphaAssign -genotypes data/trueGenotypes.txt -potentialsires data/sire.list -out outputs/out_genotypes
 
+# Example 1b: Perform parentage assignement with genotype data using number of opposing homozygous markers only.
+AlphaAssign -genotypes data/trueGenotypes.txt -potentialsires data/sire.list -out outputs/out_genotypes -runtype opp -p_threshold 0.00001
+
 # Example 2: Perform parentage assignment with sequence data:
 AlphaAssign -seqfile data/sequence.2 -potentialsires data/sire.list -out outputs/out_sequence
 
