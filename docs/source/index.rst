@@ -16,20 +16,13 @@ Introduction
 ~~~~~~~~~~~~
 
 
-|aa| is a parentage assignment algorithm. This program uses a likelihood based model to determine the sire of an individual based on a list of potential sires. AlphaAssign differs from other parentage assignment algorithms by having the option to use phase information to determine parentage. For more information on the algorithm see *Parentage assignment with low density array data and low coverage sequence data* `(Journal of Animal Breeding and Genetics) <https://onlinelibrary.wiley.com/doi/10.1111/jbg.12370>`_.
-
-Due to the disproportionate impact of map errors with the usage of phased data, we currently do not recommend using phase information to assign parentage. However, substantial advantages can be gained by using a allele probabilities generated via an imputation algorithm (e.g. AlphaImpute or AlphaAssign) to correct for genotyping errors.
+|aa| is a parentage assignment algorithm for genotype or sequence data. This program uses a likelihood based model to determine the sire of an individual based on a list of potential sires. For more information on the algorithm see *Parentage assignment with low density array data and low coverage sequence data* `(Journal of Animal Breeding and Genetics) <https://onlinelibrary.wiley.com/doi/10.1111/jbg.12370>`_.
 
 Please report bugs or suggestions on how the program / user interface / manual could be improved or made more user friendly to `John.Hickey@roslin.ed.ac.uk <John.Hickey@roslin.ed.ac.uk>`_ or `Awhalen@roslin.ed.ac.uk <awhalen@roslin.ed.ac.uk>`_.
 
 Conditions of use
 -----------------
 |aa| is part of a suite of software that our group has developed. It is fully and freely available for academic use, provided that users cite it in publications. However, due to our contractual obligations with some of the funders of the research program that has developed this suite of software, all interested commercial organizations are requested to contact John Hickey (`John.Hickey@roslin.ed.ac.uk <John.Hickey@roslin.ed.ac.uk>`_) to discuss the terms of use.
-
-Citation and Authorship
------------------------
-
-AlphaAssign is part of a suite of software that the AlphaGenes group has developed for imputation. It is fully and freely available to all academics. User are requested to credit its use on any publications. Due to our contractual obligations with some of funders of the research program that has developed this suite of software, all commercial organisations that wish to use it are requested to contact John Hickey` (`John.Hickey@roslin.ed.ac.uk <John.Hickey@roslin.ed.ac.uk>`_) :red:`to discuss the terms under which it can be used.
 
 Citation:
 Whalen, A., Gorjanc, G., and Hickey, J. (2018). Parentage assignment with low density array data and low coverage sequence data. Journal of Animal Breeding and Genetics.
@@ -42,8 +35,6 @@ While every effort has been made to ensure that |aa| does what it claims to do, 
 
 Run commands and spec file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-|aa| is a parentage assignment algorithm. To run |aa| call ``python AlphaAssign.py [options]``. All options are of the form "option=parameter". The following options are valid for |aa|:
 
 AlphaAssign takes in a number of command line arguments to control the program's behavior. To view a list of arguments, run AlphaAssign without any command line arguments, i.e. ``AlphaAssign`` or ``AlphaAssign -h``. 
 
@@ -146,7 +137,7 @@ The sequence data file is in a similar Sequence data is given in a similar forma
 Example: ::
 
   id1 4 0 0 7 # Reference allele for id1
-  id1 0 3 0 0 # Alternative allele for id2
+  id1 0 3 0 0 # Alternative allele for id1
   id2 1 3 4 3
   id2 1 1 6 2
   id3 0 3 0 1
@@ -193,13 +184,13 @@ This file gives the basic output for AlphaAssign. The first column is the id of 
 
 Example: ::
 
-id candidate altParent chosen score estSire estFullSib esthalfSib estNull nOpposing nOpposingWOparent nLoci logP
-801 657 0 0 136.2877197265625 0.0 -136.28772 -222.13818 -326.5254 0 0 1000 -4.3172179315834146e-05
-801 735 0 0 0.0 -50.85962 0.0 -51.37207 -126.38208 67 67 1000 -76.93231757011387
-801 703 0 0 22.154541015625 0.0 -22.154541 -85.90723 -170.91504 40 40 1000 -29.83771178795763
-801 609 0 0 22.9976806640625 0.0 -22.99768 -87.28125 -172.93481 40 40 1000 -29.83771178795763
-801 629 0 0 25.065185546875 0.0 -25.065186 -88.16138 -171.9967 38 38 1000 -26.964562708500615
-801 763 0 0 0.0 -77.24463 0.0 -40.976196 -104.28198 72 72 1000 -87.05572755433364
-801 715 0 0 0.0 -39.418335 0.0 -53.59961 -130.56909 63 63 1000 -69.11322704626824
+  id candidate altParent chosen score estSire estFullSib esthalfSib estNull nOpposing nOpposingWOparent nLoci logP
+  801 657 0 0 136.28771 0.0 -136.28772 -222.13818 -326.5254 0 0 1000 -4.3172176e-05
+  801 735 0 0 0.0 -50.85962 0.0 -51.37207 -126.38208 67 67 1000 -76.93231
+  801 703 0 0 22.15454 0.0 -22.154541 -85.90723 -170.91504 40 40 1000 -29.8377
+  801 609 0 0 22.997680 0.0 -22.99768 -87.28125 -172.93481 40 40 1000 -29.8377
+  801 629 0 0 25.065185 0.0 -25.065186 -88.16138 -171.9967 38 38 1000 -26.96456
+  801 763 0 0 0.0 -77.24463 0.0 -40.976196 -104.28198 72 72 1000 -87.05572755433364
+  801 715 0 0 0.0 -39.41833 0.0 -53.59961 -130.56909 63 63 1000 -69.11322704626824
 
-.. |aa| replace:: **AlphaAssign** 
+.. |aa| replace:: AlphaAssign
