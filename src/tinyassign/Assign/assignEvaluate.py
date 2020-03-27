@@ -244,7 +244,7 @@ def readInAssignments(fileName, findSire, pedigree) :
     with open(fileName) as f:
         lines = f.readlines()
     for line in lines:
-        parts = line.strip().split(" ")
+        parts = line.strip().split()
         idx = parts[0]
         potentialSires = parts[1:]
         sires = [pedigree.individuals[idx] for idx in potentialSires]
