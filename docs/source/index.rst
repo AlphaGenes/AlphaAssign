@@ -160,7 +160,7 @@ Example: ::
 Binary plink file
 -----------------
 
-AlphaPeel supports the use of binary plink files using the package ``AlphaPlinkPython``. AlphaPeel will use the pedigree supplied by the ``.fam`` file if a pedigree file is not supplied. Otherwise the pedigree file will be used and the ``.fam`` file will be ignored. 
+AlphaAssign supports the use of binary plink files using the package ``AlphaPlinkPython``. AlphaAssign will use the pedigree supplied by the ``.fam`` file if a pedigree file is not supplied. Otherwise the pedigree file will be used and the ``.fam`` file will be ignored. 
 
 Potential sires file
 --------------------
