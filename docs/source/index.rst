@@ -165,7 +165,7 @@ AlphaAssign supports the use of binary plink files using the package ``AlphaPlin
 Potential sires file
 --------------------
 
-A list of individual IDs and the ids of of potential sires. The first column gives the id of the individual. The remaining values give the id of the sire. Rows can have different numbers of potential sires.
+A list of individual ids and the ids of of potential sires. The first column gives the id of the individual. The remaining values give the id of the sire. Rows can have different numbers of potential sires.
 
 Example: ::
 
