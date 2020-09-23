@@ -9,7 +9,7 @@ setup(
     long_description="AlphaAssign is a parentage assignement algorithm that was designed to handle SNP and GBS data.",
     long_description_content_type="text/markdown",
     url="",
-    
+    license="MIT license",
     packages=['tinyassign','tinyassign.Assign','tinyassign.tinyhouse'],
     package_dir={'': 'src'},
 
