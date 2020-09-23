@@ -22,7 +22,7 @@ Please report bugs or suggestions on how the program / user interface / manual c
 
 Conditions of use
 -----------------
-|aa| is part of a suite of software that our group has developed. It is fully and freely available for academic use, provided that users cite it in publications. However, due to our contractual obligations with some of the funders of the research program that has developed this suite of software, all interested commercial organizations are requested to contact John Hickey (`John.Hickey@roslin.ed.ac.uk <John.Hickey@roslin.ed.ac.uk>`_) to discuss the terms of use.
+|aa| is part of a suite of software that our group has developed. It is fully and freely available for all use under the MIT License.
 
 Citation:
 Whalen, A., Gorjanc, G., and Hickey, J. (2018). Parentage assignment with low density array data and low coverage sequence data. Journal of Animal Breeding and Genetics.

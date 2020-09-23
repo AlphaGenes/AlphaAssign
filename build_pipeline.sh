@@ -36,5 +36,9 @@ cp docs/build/latex/AlphaAssign.pdf $target
 # Move the examples over
 cp -r example $target
 chmod 770 $target/example/run_examples.sh
+
+cp MIT_License.txt $target
+
+
 zip -r $target.zip AlphaAssign
 
