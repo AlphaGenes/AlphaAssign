@@ -1,6 +1,10 @@
 # pyinstaller tinyMgsAssign.py --onefile -p src/
 
-from numba import jit, jitclass, float32, int32, int64, optional
+from numba import jit, float32, int32, int64, optional
+try:
+    from numba.experimental import jitclass
+except ModuleNotFoundError:
+    from numba import jitclass
 import numpy as np
 from collections import OrderedDict
 from ..tinyhouse import ProbMath
